@@ -1,12 +1,22 @@
 import React, { useRef } from 'react';
 import {
+  Animated,
   Dimensions,
+  Easing,
   Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import useInterval from 'use-interval';
+
+interface snakeNode {
+  x: number;
+  y: number;
+}
+
+const TICK_TIME = 250
 
 const WIDTH = Dimensions.get('screen').width - 16
 
@@ -15,13 +25,54 @@ function App(): JSX.Element {
   const currentDirection = useRef('')
   const nextDirection = useRef('')
 
+  const snake = useRef(new Animated.ValueXY()).current
+
+  const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }])
+
+  function tick() {
+
+    currentDirection.current = nextDirection.current
+
+    if (currentDirection.current === 'up') {
+      snakeNodes.current[0].y -= WIDTH/25
+    }
+    if (currentDirection.current === 'left') {
+      snakeNodes.current[0].x -= WIDTH/25
+    }
+    if (currentDirection.current === 'right') {
+      snakeNodes.current[0].x += WIDTH/25
+    }
+    if (currentDirection.current === 'down') {
+      snakeNodes.current[0].y += WIDTH/25
+    }
+
+
+    Animated.timing(snake, {
+      toValue: { x: snakeNodes.current[0].x, y: snakeNodes.current[0].y },
+      duration: TICK_TIME,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start()
+
+  }
+
+
+  useInterval(tick, TICK_TIME)
+
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
 
       </View>
       <View style={{ width: WIDTH, aspectRatio: 1, backgroundColor: 'darkgray' }}>
-        <View style={{ width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red' }} />
+        <Animated.View style={{
+          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red',
+          transform: [
+            { translateX: snake.x },
+            { translateY: snake.y }
+          ]
+        }}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => { if (currentDirection.current !== 'down') nextDirection.current = 'up' }} >
