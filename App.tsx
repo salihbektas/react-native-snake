@@ -25,11 +25,16 @@ function App(): JSX.Element {
   const currentDirection = useRef('')
   const nextDirection = useRef('')
 
-  const snake = useRef(new Animated.ValueXY()).current
+  const snake = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
 
-  const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }])
+  const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
 
   function tick() {
+
+    for(let i = snake.length-1; i > 0; --i){
+      snakeNodes.current[i].x = snakeNodes.current[i-1].x
+      snakeNodes.current[i].y = snakeNodes.current[i-1].y
+    }
 
     currentDirection.current = nextDirection.current
 
@@ -47,12 +52,14 @@ function App(): JSX.Element {
     }
 
 
-    Animated.timing(snake, {
-      toValue: { x: snakeNodes.current[0].x, y: snakeNodes.current[0].y },
-      duration: TICK_TIME,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start()
+    for(let i = 0; i < snake.length; ++i){
+      Animated.timing(snake[i], {
+        toValue: { x: snakeNodes.current[i].x, y: snakeNodes.current[i].y },
+        duration: TICK_TIME,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start()
+    }
 
   }
 
@@ -65,14 +72,15 @@ function App(): JSX.Element {
 
       </View>
       <View style={{ width: WIDTH, aspectRatio: 1, backgroundColor: 'darkgray' }}>
-        <Animated.View style={{
-          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red',
+        {snake.map((item, index) => <Animated.View key={index} style={{
+          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
           transform: [
-            { translateX: snake.x },
-            { translateY: snake.y }
+            { translateX: snake[index].x},
+            { translateY: snake[index].y }
           ]
         }}
-        />
+        />)}
+        
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => { if (currentDirection.current !== 'down') nextDirection.current = 'up' }} >
