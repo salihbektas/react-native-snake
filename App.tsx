@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -24,6 +24,8 @@ function App(): JSX.Element {
 
   const currentDirection = useRef('')
   const nextDirection = useRef('')
+
+  const [isPlaying, setIsPlaying] = useState(true)
 
   const snake = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
 
@@ -61,10 +63,14 @@ function App(): JSX.Element {
       }).start()
     }
 
+    if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > WIDTH ||
+        snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > WIDTH) {
+      setIsPlaying(false)
+    }
   }
 
 
-  useInterval(tick, TICK_TIME)
+  useInterval(tick, isPlaying && TICK_TIME)
 
   return (
     <SafeAreaView style={styles.main}>
