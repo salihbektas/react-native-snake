@@ -31,6 +31,24 @@ function App(): JSX.Element {
 
   const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
 
+  const [bait, setBait] = useState(() => setLocation())
+
+  function setLocation() {
+    let baitX : number
+
+    do{
+      baitX = Math.floor(Math.random()*25)
+    } while(snakeNodes.current.find(({x}) => x === baitX))
+
+    let baitY : number
+
+    do{
+      baitY = Math.floor(Math.random()*25)
+    } while(snakeNodes.current.find(({y}) => y === baitY))
+    
+    return {baitX, baitY}
+  }
+
   function tick() {
 
     for(let i = snake.length-1; i > 0; --i){
@@ -86,6 +104,9 @@ function App(): JSX.Element {
           ]
         }}
         />)}
+
+        <View style={{ width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'green', position: 'absolute',
+               top: bait.baitY * (WIDTH / 25), left: bait.baitX * (WIDTH / 25)}}/> 
         
       </View>
       <View style={styles.buttonContainer}>
