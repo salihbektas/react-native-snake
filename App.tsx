@@ -59,30 +59,30 @@ function App(): JSX.Element {
     currentDirection.current = nextDirection.current
 
     if (currentDirection.current === 'up') {
-      snakeNodes.current[0].y -= WIDTH/25
+      snakeNodes.current[0].y--
     }
     if (currentDirection.current === 'left') {
-      snakeNodes.current[0].x -= WIDTH/25
+      snakeNodes.current[0].x--
     }
     if (currentDirection.current === 'right') {
-      snakeNodes.current[0].x += WIDTH/25
+      snakeNodes.current[0].x++
     }
     if (currentDirection.current === 'down') {
-      snakeNodes.current[0].y += WIDTH/25
+      snakeNodes.current[0].y++
     }
 
 
     for(let i = 0; i < snake.length; ++i){
       Animated.timing(snake[i], {
-        toValue: { x: snakeNodes.current[i].x, y: snakeNodes.current[i].y },
+        toValue: { x: snakeNodes.current[i].x * (WIDTH/25), y: snakeNodes.current[i].y * (WIDTH/25)},
         duration: TICK_TIME,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start()
     }
 
-    if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > WIDTH ||
-        snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > WIDTH) {
+    if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > 24 ||
+        snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
       setIsPlaying(false)
     }
   }
