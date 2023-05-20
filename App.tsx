@@ -50,6 +50,14 @@ function App(): JSX.Element {
   }
 
   function tick() {
+    let eat = 0
+
+    if(snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
+      snakeNodes.current.push({...snakeNodes.current[snakeNodes.current.length - 1]})
+      snake.push(new Animated.ValueXY())
+      setBait(setLocation())
+      eat = 1
+    }
 
     for(let i = snake.length-1; i > 0; --i){
       snakeNodes.current[i].x = snakeNodes.current[i-1].x
@@ -72,7 +80,7 @@ function App(): JSX.Element {
     }
 
 
-    for(let i = 0; i < snake.length; ++i){
+    for(let i = 0; i < snake.length - eat; ++i){
       Animated.timing(snake[i], {
         toValue: { x: snakeNodes.current[i].x * (WIDTH/25), y: snakeNodes.current[i].y * (WIDTH/25)},
         duration: TICK_TIME,
@@ -80,6 +88,8 @@ function App(): JSX.Element {
         useNativeDriver: true,
       }).start()
     }
+
+    eat = 0
 
     if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > 24 ||
         snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
