@@ -27,41 +27,78 @@ function App(): JSX.Element {
 
   const [isPlaying, setIsPlaying] = useState(true)
 
-  const snake = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
+  const snakeValues = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
 
   const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
 
   const [bait, setBait] = useState(() => setLocation())
 
+  const [snake, setSnake] = useState(() => [<Animated.View key={0} style={{
+    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
+    top: 0, left: 0,
+    transform: [
+      { translateX: snakeValues[0].x },
+      { translateY: snakeValues[0].y }
+    ]
+  }}
+  />,
+  <Animated.View key={1} style={{
+    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
+    top: 0, left: 0,
+    transform: [
+      { translateX: snakeValues[1].x },
+      { translateY: snakeValues[1].y }
+    ]
+  }}
+  />,
+  <Animated.View key={2} style={{
+    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
+    top: 0, left: 0,
+    transform: [
+      { translateX: snakeValues[2].x },
+      { translateY: snakeValues[2].y }
+    ]
+  }}
+  />])
+
   function setLocation() {
-    let baitX : number
+    let baitX: number
 
-    do{
-      baitX = Math.floor(Math.random()*25)
-    } while(snakeNodes.current.find(({x}) => x === baitX))
+    do {
+      baitX = Math.floor(Math.random() * 25)
+    } while (snakeNodes.current.find(({ x }) => x === baitX))
 
-    let baitY : number
+    let baitY: number
 
-    do{
-      baitY = Math.floor(Math.random()*25)
-    } while(snakeNodes.current.find(({y}) => y === baitY))
-    
-    return {baitX, baitY}
+    do {
+      baitY = Math.floor(Math.random() * 25)
+    } while (snakeNodes.current.find(({ y }) => y === baitY))
+
+    return { baitX, baitY }
   }
 
   function tick() {
-    let eat = 0
 
-    if(snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
-      snakeNodes.current.push({...snakeNodes.current[snakeNodes.current.length - 1]})
-      snake.push(new Animated.ValueXY())
+    if (snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
+      snakeNodes.current.push({ ...snakeNodes.current[snakeNodes.current.length - 1] })
+      snakeValues.push(new Animated.ValueXY({
+        x: snakeNodes.current[snakeNodes.current.length - 2].x * (WIDTH / 25),
+        y: snakeNodes.current[snakeNodes.current.length - 2].y * (WIDTH / 25)
+      }))
       setBait(setLocation())
-      eat = 1
+      setSnake([...snake, <Animated.View key={snakeValues.length - 1} style={{
+        width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
+        transform: [
+          { translateX: snakeValues[snakeValues.length - 1].x },
+          { translateY: snakeValues[snakeValues.length - 1].y }
+        ]
+      }}
+      />])
     }
 
-    for(let i = snake.length-1; i > 0; --i){
-      snakeNodes.current[i].x = snakeNodes.current[i-1].x
-      snakeNodes.current[i].y = snakeNodes.current[i-1].y
+    for (let i = snakeValues.length - 1; i > 0; --i) {
+      snakeNodes.current[i].x = snakeNodes.current[i - 1].x
+      snakeNodes.current[i].y = snakeNodes.current[i - 1].y
     }
 
     currentDirection.current = nextDirection.current
@@ -80,19 +117,17 @@ function App(): JSX.Element {
     }
 
 
-    for(let i = 0; i < snake.length - eat; ++i){
-      Animated.timing(snake[i], {
-        toValue: { x: snakeNodes.current[i].x * (WIDTH/25), y: snakeNodes.current[i].y * (WIDTH/25)},
+    for (let i = 0; i < snakeValues.length; ++i) {
+      Animated.timing(snakeValues[i], {
+        toValue: { x: snakeNodes.current[i].x * (WIDTH / 25), y: snakeNodes.current[i].y * (WIDTH / 25) },
         duration: TICK_TIME,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start()
     }
 
-    eat = 0
-
     if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > 24 ||
-        snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
+      snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
       setIsPlaying(false)
     }
   }
@@ -106,18 +141,13 @@ function App(): JSX.Element {
 
       </View>
       <View style={{ width: WIDTH, aspectRatio: 1, backgroundColor: 'darkgray' }}>
-        {snake.map((item, index) => <Animated.View key={index} style={{
-          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
-          transform: [
-            { translateX: snake[index].x},
-            { translateY: snake[index].y }
-          ]
-        }}
-        />)}
 
-        <View style={{ width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'green', position: 'absolute',
-               top: bait.baitY * (WIDTH / 25), left: bait.baitX * (WIDTH / 25)}}/> 
-        
+        <View style={{
+          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'green', position: 'absolute',
+          top: bait.baitY * (WIDTH / 25), left: bait.baitX * (WIDTH / 25)
+        }} />
+
+        {snake}
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => { if (currentDirection.current !== 'down') nextDirection.current = 'up' }} >
