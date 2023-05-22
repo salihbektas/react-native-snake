@@ -30,6 +30,8 @@ function App(): JSX.Element {
 
   const [time, setTime] = useState(0)
 
+  const [point, setPoint] = useState(0)
+
   const snakeValues = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
 
   const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
@@ -79,6 +81,7 @@ function App(): JSX.Element {
   function tick() {
 
     if (snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
+      setPoint(p => p + 1)
       snakeNodes.current.push({ ...snakeNodes.current[snakeNodes.current.length - 1] })
       snakeValues.push(new Animated.ValueXY({
         x: snakeNodes.current[snakeNodes.current.length - 2].x * (WIDTH / 25),
@@ -138,7 +141,8 @@ function App(): JSX.Element {
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
-        <Text style={styles.time}>Time = {Math.floor(time / 60)} : {time % 60}</Text>
+        <Text style={styles.infoText}>Time = {Math.floor(time / 60)} : {time % 60}</Text>
+        <Text style={styles.infoText}>Point = {point}</Text>
       </View>
       <View style={styles.board}>
 
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  time: {
+  infoText: {
     color: Colors.white,
     fontSize: 26,
     fontWeight: 'bold',
