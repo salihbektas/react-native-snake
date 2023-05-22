@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import useInterval from 'use-interval';
+import Colors from './Colors';
 
 interface snakeNode {
   x: number;
@@ -169,31 +170,30 @@ const styles = StyleSheet.create({
   main: {
     padding: 8,
     flex: 1,
-    backgroundColor: '#0d1117'
+    backgroundColor: Colors.dark
   },
 
   topContainer: {
-    flex: 1,
-    backgroundColor: 'orange'
+    flex: 1
   },
 
   board: {
     width: WIDTH,
     aspectRatio: 1,
-    backgroundColor: 'darkgray'
+    backgroundColor: Colors.grey
   },
 
   snakeNode: {
     width: WIDTH / 25,
     aspectRatio: 1,
-    backgroundColor: 'red',
+    backgroundColor: Colors.purple,
     position: 'absolute'
   },
 
   bait: {
     width: WIDTH / 25,
     aspectRatio: 1,
-    backgroundColor: 'green',
+    backgroundColor: Colors.green,
     position: 'absolute'
   },
 
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 
   button: {
     flex: 1,
-    backgroundColor: '#f0f6fc',
+    backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     margin: 2,
