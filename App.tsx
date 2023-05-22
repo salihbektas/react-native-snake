@@ -33,33 +33,29 @@ function App(): JSX.Element {
 
   const [bait, setBait] = useState(() => setLocation())
 
-  const [snake, setSnake] = useState(() => [<Animated.View key={0} style={{
-    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
-    top: 0, left: 0,
-    transform: [
-      { translateX: snakeValues[0].x },
-      { translateY: snakeValues[0].y }
-    ]
-  }}
-  />,
-  <Animated.View key={1} style={{
-    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
-    top: 0, left: 0,
-    transform: [
-      { translateX: snakeValues[1].x },
-      { translateY: snakeValues[1].y }
-    ]
-  }}
-  />,
-  <Animated.View key={2} style={{
-    width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
-    top: 0, left: 0,
-    transform: [
-      { translateX: snakeValues[2].x },
-      { translateY: snakeValues[2].y }
-    ]
-  }}
-  />])
+  const [snake, setSnake] = useState(() => [
+    <Animated.View key={0} style={{
+      ...styles.snakeNode,
+      transform: [
+        { translateX: snakeValues[0].x },
+        { translateY: snakeValues[0].y }
+      ]
+    }} />,
+    <Animated.View key={1} style={{
+      ...styles.snakeNode,
+      transform: [
+        { translateX: snakeValues[1].x },
+        { translateY: snakeValues[1].y }
+      ]
+    }} />,
+    <Animated.View key={2} style={{
+      ...styles.snakeNode,
+      transform: [
+        { translateX: snakeValues[2].x },
+        { translateY: snakeValues[2].y }
+      ]
+    }} />
+  ])
 
   function setLocation() {
     let baitX: number
@@ -87,13 +83,12 @@ function App(): JSX.Element {
       }))
       setBait(setLocation())
       setSnake([...snake, <Animated.View key={snakeValues.length - 1} style={{
-        width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'red', position: 'absolute',
+        ...styles.snakeNode,
         transform: [
           { translateX: snakeValues[snakeValues.length - 1].x },
           { translateY: snakeValues[snakeValues.length - 1].y }
         ]
-      }}
-      />])
+      }} />])
     }
 
     for (let i = snakeValues.length - 1; i > 0; --i) {
@@ -140,11 +135,12 @@ function App(): JSX.Element {
       <View style={styles.topContainer}>
 
       </View>
-      <View style={{ width: WIDTH, aspectRatio: 1, backgroundColor: 'darkgray' }}>
+      <View style={styles.board}>
 
         <View style={{
-          width: WIDTH / 25, aspectRatio: 1, backgroundColor: 'green', position: 'absolute',
-          top: bait.baitY * (WIDTH / 25), left: bait.baitX * (WIDTH / 25)
+          ...styles.bait,
+          top: bait.baitY * (WIDTH / 25),
+          left: bait.baitX * (WIDTH / 25)
         }} />
 
         {snake}
@@ -179,6 +175,26 @@ const styles = StyleSheet.create({
   topContainer: {
     flex: 1,
     backgroundColor: 'orange'
+  },
+
+  board: {
+    width: WIDTH,
+    aspectRatio: 1,
+    backgroundColor: 'darkgray'
+  },
+
+  snakeNode: {
+    width: WIDTH / 25,
+    aspectRatio: 1,
+    backgroundColor: 'red',
+    position: 'absolute'
+  },
+
+  bait: {
+    width: WIDTH / 25,
+    aspectRatio: 1,
+    backgroundColor: 'green',
+    position: 'absolute'
   },
 
   buttonContainer: {
