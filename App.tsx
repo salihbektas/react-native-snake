@@ -230,7 +230,11 @@ const styles = StyleSheet.create({
 
   middleRow: { flexDirection: 'row', flex: 1 },
 
-  text: { fontSize: 16, fontWeight: '800' }
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.dark
+  }
 
 });
 
