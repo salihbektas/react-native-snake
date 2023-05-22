@@ -28,6 +28,8 @@ function App(): JSX.Element {
 
   const [isPlaying, setIsPlaying] = useState(true)
 
+  const [time, setTime] = useState(0)
+
   const snakeValues = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
 
   const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
@@ -131,10 +133,12 @@ function App(): JSX.Element {
 
   useInterval(tick, isPlaying && TICK_TIME)
 
+  useInterval(() => setTime(t => t + 1), isPlaying && 1000)
+
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
-
+        <Text style={styles.time}>Time = {Math.floor(time / 60)} : {time % 60}</Text>
       </View>
       <View style={styles.board}>
 
@@ -174,7 +178,17 @@ const styles = StyleSheet.create({
   },
 
   topContainer: {
-    flex: 1
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+
+  time: {
+    color: Colors.white,
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
 
   board: {
