@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -32,7 +33,7 @@ function App(): JSX.Element {
 
   const [point, setPoint] = useState(0)
 
-  const snakeValues = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]).current
+  const snakeValues = useRef([new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()])
 
   const snakeNodes = useRef<snakeNode[]>([{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }])
 
@@ -42,22 +43,22 @@ function App(): JSX.Element {
     <Animated.View key={0} style={{
       ...styles.snakeNode,
       transform: [
-        { translateX: snakeValues[0].x },
-        { translateY: snakeValues[0].y }
+        { translateX: snakeValues.current[0].x },
+        { translateY: snakeValues.current[0].y }
       ]
     }} />,
     <Animated.View key={1} style={{
       ...styles.snakeNode,
       transform: [
-        { translateX: snakeValues[1].x },
-        { translateY: snakeValues[1].y }
+        { translateX: snakeValues.current[1].x },
+        { translateY: snakeValues.current[1].y }
       ]
     }} />,
     <Animated.View key={2} style={{
       ...styles.snakeNode,
       transform: [
-        { translateX: snakeValues[2].x },
-        { translateY: snakeValues[2].y }
+        { translateX: snakeValues.current[2].x },
+        { translateY: snakeValues.current[2].y }
       ]
     }} />
   ])
@@ -83,21 +84,21 @@ function App(): JSX.Element {
     if (snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
       setPoint(p => p + 1)
       snakeNodes.current.push({ ...snakeNodes.current[snakeNodes.current.length - 1] })
-      snakeValues.push(new Animated.ValueXY({
+      snakeValues.current.push(new Animated.ValueXY({
         x: snakeNodes.current[snakeNodes.current.length - 2].x * (WIDTH / 25),
         y: snakeNodes.current[snakeNodes.current.length - 2].y * (WIDTH / 25)
       }))
       setBait(setLocation())
-      setSnake([...snake, <Animated.View key={snakeValues.length - 1} style={{
+      setSnake([...snake, <Animated.View key={snakeValues.current.length - 1} style={{
         ...styles.snakeNode,
         transform: [
-          { translateX: snakeValues[snakeValues.length - 1].x },
-          { translateY: snakeValues[snakeValues.length - 1].y }
+          { translateX: snakeValues.current[snakeValues.current.length - 1].x },
+          { translateY: snakeValues.current[snakeValues.current.length - 1].y }
         ]
       }} />])
     }
 
-    for (let i = snakeValues.length - 1; i > 0; --i) {
+    for (let i = snakeValues.current.length - 1; i > 0; --i) {
       snakeNodes.current[i].x = snakeNodes.current[i - 1].x
       snakeNodes.current[i].y = snakeNodes.current[i - 1].y
     }
@@ -118,8 +119,8 @@ function App(): JSX.Element {
     }
 
 
-    for (let i = 0; i < snakeValues.length; ++i) {
-      Animated.timing(snakeValues[i], {
+    for (let i = 0; i < snakeValues.current.length; ++i) {
+      Animated.timing(snakeValues.current[i], {
         toValue: { x: snakeNodes.current[i].x * (WIDTH / 25), y: snakeNodes.current[i].y * (WIDTH / 25) },
         duration: TICK_TIME,
         easing: Easing.linear,
@@ -133,6 +134,40 @@ function App(): JSX.Element {
     }
   }
 
+  function reset() {
+    currentDirection.current = ''
+    nextDirection.current = ''
+    setPoint(0)
+    setTime(0)
+    setBait(setLocation())
+    snakeNodes.current = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }]
+    snakeValues.current = [new Animated.ValueXY(), new Animated.ValueXY(), new Animated.ValueXY()]
+    setSnake([
+      <Animated.View key={0} style={{
+       ...styles.snakeNode,
+        transform: [
+          { translateX: snakeValues.current[0].x },
+          { translateY: snakeValues.current[0].y }
+        ]
+      }} />,
+      <Animated.View key={1} style={{
+       ...styles.snakeNode,
+        transform: [
+          { translateX: snakeValues.current[1].x },
+          { translateY: snakeValues.current[1].y }
+        ]
+      }} />,
+      <Animated.View key={2} style={{
+       ...styles.snakeNode,
+        transform: [
+          { translateX: snakeValues.current[2].x },
+          { translateY: snakeValues.current[2].y }
+        ]
+      }} />
+    ])
+    setIsPlaying(true)
+  }
+
 
   useInterval(tick, isPlaying && TICK_TIME)
 
@@ -142,6 +177,9 @@ function App(): JSX.Element {
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
         <Text style={styles.infoText}>Time = {Math.floor(time / 60)} : {time % 60}</Text>
+        <Pressable onPress={reset}>
+          <Image source={require("./assets/reset.png")} style={styles.reset} />
+        </Pressable>
         <Text style={styles.infoText}>Point = {point}</Text>
       </View>
       <View style={styles.board}>
@@ -193,6 +231,13 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+
+  reset: {
+    tintColor: Colors.white,
+    resizeMode: 'contain',
+    height: 30,
+    aspectRatio: 1
   },
 
   board: {
