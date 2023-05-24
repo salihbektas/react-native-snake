@@ -168,10 +168,13 @@ function App(): JSX.Element {
     setIsPlaying(true)
   }
 
-  function formatTime(time: number){
+  function formatTime(time: number) {
     return new Date(time * 1000).toISOString().slice(14, 19);
   }
 
+  function formatPoint(point: number) {
+    return point.toString().padStart(2, '\u2007').padEnd(3, '\u2007')
+  }
 
   useInterval(tick, isPlaying && TICK_TIME)
 
@@ -184,7 +187,7 @@ function App(): JSX.Element {
         <Pressable onPress={reset}>
           <Image source={require("./assets/reset.png")} style={styles.reset} />
         </Pressable>
-        <Text style={styles.infoText}>Point = {point}</Text>
+        <Text style={styles.infoText}>Point = {formatPoint(point)}</Text>
       </View>
       <View style={styles.board}>
 
