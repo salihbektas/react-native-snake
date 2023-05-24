@@ -168,6 +168,10 @@ function App(): JSX.Element {
     setIsPlaying(true)
   }
 
+  function formatTime(time: number){
+    return new Date(time * 1000).toISOString().slice(14, 19);
+  }
+
 
   useInterval(tick, isPlaying && TICK_TIME)
 
@@ -176,7 +180,7 @@ function App(): JSX.Element {
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
-        <Text style={styles.infoText}>Time = {Math.floor(time / 60)} : {time % 60}</Text>
+        <Text style={styles.infoText}>Time = {formatTime(time)}</Text>
         <Pressable onPress={reset}>
           <Image source={require("./assets/reset.png")} style={styles.reset} />
         </Pressable>
