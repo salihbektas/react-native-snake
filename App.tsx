@@ -49,6 +49,8 @@ function App(): JSX.Element {
     }} />,
     <Animated.View key={1} style={{
       ...styles.snakeNode,
+      width: (WIDTH / 25) -2,
+      margin: 1,
       transform: [
         { translateX: snakeValues.current[1].x },
         { translateY: snakeValues.current[1].y }
@@ -56,6 +58,8 @@ function App(): JSX.Element {
     }} />,
     <Animated.View key={2} style={{
       ...styles.snakeNode,
+      width: (WIDTH / 25) -2,
+      margin: 1,
       transform: [
         { translateX: snakeValues.current[2].x },
         { translateY: snakeValues.current[2].y }
@@ -82,6 +86,9 @@ function App(): JSX.Element {
   function tick() {
 
     if (snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
+      let margin = Math.ceil(snake.length / 5)
+      if (margin > 4)
+        margin = 4
       setPoint(p => p + 1)
       snakeNodes.current.push({ ...snakeNodes.current[snakeNodes.current.length - 1] })
       snakeValues.current.push(new Animated.ValueXY({
@@ -91,6 +98,8 @@ function App(): JSX.Element {
       setBait(setLocation())
       setSnake([...snake, <Animated.View key={snakeValues.current.length - 1} style={{
         ...styles.snakeNode,
+        width: (WIDTH / 25) -2*margin,
+        margin: margin,
         transform: [
           { translateX: snakeValues.current[snakeValues.current.length - 1].x },
           { translateY: snakeValues.current[snakeValues.current.length - 1].y }
@@ -152,6 +161,8 @@ function App(): JSX.Element {
       }} />,
       <Animated.View key={1} style={{
         ...styles.snakeNode,
+        width: (WIDTH / 25) -2,
+        margin: 1,
         transform: [
           { translateX: snakeValues.current[1].x },
           { translateY: snakeValues.current[1].y }
@@ -159,6 +170,8 @@ function App(): JSX.Element {
       }} />,
       <Animated.View key={2} style={{
         ...styles.snakeNode,
+        width: (WIDTH / 25) -2,
+        margin: 1,
         transform: [
           { translateX: snakeValues.current[2].x },
           { translateY: snakeValues.current[2].y }
@@ -255,6 +268,7 @@ const styles = StyleSheet.create({
 
   snakeNode: {
     width: WIDTH / 25,
+    borderRadius: 5,
     aspectRatio: 1,
     backgroundColor: Colors.purple,
     position: 'absolute'
