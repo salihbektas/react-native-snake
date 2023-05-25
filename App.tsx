@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
 
   bait: {
     width: WIDTH / 25,
+    borderRadius: WIDTH / 50,
     aspectRatio: 1,
     backgroundColor: Colors.green,
     position: 'absolute'
