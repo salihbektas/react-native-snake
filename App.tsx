@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  Vibration,
   View,
 } from 'react-native';
 import useInterval from 'use-interval';
@@ -141,6 +142,7 @@ function App(): JSX.Element {
       if(time !== 0 && snakeNodes.current[0].x === snakeNodes.current[i].x && 
       snakeNodes.current[0].y === snakeNodes.current[i].y){
         setIsPlaying(false)
+        Vibration.vibrate(100)
         break
       }
     }
@@ -148,6 +150,7 @@ function App(): JSX.Element {
     if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > 24 ||
       snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
       setIsPlaying(false)
+      Vibration.vibrate(100)
     }
   }
 
