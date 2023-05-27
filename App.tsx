@@ -137,6 +137,14 @@ function App(): JSX.Element {
       }).start()
     }
 
+    for (let i = 1; i < snakeNodes.current.length; i++) {
+      if(time !== 0 && snakeNodes.current[0].x === snakeNodes.current[i].x && 
+      snakeNodes.current[0].y === snakeNodes.current[i].y){
+        setIsPlaying(false)
+        break
+      }
+    }
+
     if (snakeNodes.current[0].x < 0 || snakeNodes.current[0].x > 24 ||
       snakeNodes.current[0].y < 0 || snakeNodes.current[0].y > 24) {
       setIsPlaying(false)
