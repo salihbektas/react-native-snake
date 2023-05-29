@@ -224,7 +224,7 @@ function App(): JSX.Element {
         {snake}
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={() => { if (currentDirection !== 'down') setNextDirection('up') }} >
+        <Pressable style={{...styles.button, marginVertical: 2}} onPress={() => { if (currentDirection !== 'down') setNextDirection('up') }} >
           <Text style={styles.text} >Up</Text>
         </Pressable>
         <View style={styles.middleRow}>
@@ -235,7 +235,7 @@ function App(): JSX.Element {
             <Text style={styles.text} >Right</Text>
           </Pressable>
         </View>
-        <Pressable style={styles.button} onPress={() => { if (currentDirection !== 'up') setNextDirection('down') }} >
+        <Pressable style={{...styles.button, marginVertical: 2}} onPress={() => { if (currentDirection !== 'up') setNextDirection('down') }} >
           <Text style={styles.text} >Down</Text>
         </Pressable>
       </View>
@@ -302,11 +302,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 2,
+    marginHorizontal: 2,
     borderRadius: 8
   },
 
-  middleRow: { flexDirection: 'row', flex: 1 },
+  middleRow: {
+    flexDirection: 'row',
+    flex: 1 ,
+    marginVertical: 2
+  },
 
   text: {
     fontSize: 20,
