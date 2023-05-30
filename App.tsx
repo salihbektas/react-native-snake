@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
   Animated,
-  Dimensions,
   Easing,
   Image,
   Pressable,
@@ -13,15 +12,13 @@ import {
 } from 'react-native';
 import useInterval from 'use-interval';
 import Colors from './Colors';
+import { STEP, TICK_TIME, WIDTH } from './assets/src/constants';
 
 interface snakeNode {
   x: number;
   y: number;
 }
 
-const TICK_TIME = 250
-
-const WIDTH = Dimensions.get('screen').width - 16
 
 function App(): JSX.Element {
 
@@ -50,7 +47,7 @@ function App(): JSX.Element {
     }} />,
     <Animated.View key={1} style={{
       ...styles.snakeNode,
-      width: (WIDTH / 25) -2,
+      width: STEP -2,
       margin: 1,
       transform: [
         { translateX: snakeValues.current[1].x },
@@ -59,7 +56,7 @@ function App(): JSX.Element {
     }} />,
     <Animated.View key={2} style={{
       ...styles.snakeNode,
-      width: (WIDTH / 25) -2,
+      width: STEP -2,
       margin: 1,
       transform: [
         { translateX: snakeValues.current[2].x },
@@ -93,13 +90,13 @@ function App(): JSX.Element {
       setPoint(p => p + 1)
       snakeNodes.current.push({ ...snakeNodes.current[snakeNodes.current.length - 1] })
       snakeValues.current.push(new Animated.ValueXY({
-        x: snakeNodes.current[snakeNodes.current.length - 2].x * (WIDTH / 25),
-        y: snakeNodes.current[snakeNodes.current.length - 2].y * (WIDTH / 25)
+        x: snakeNodes.current[snakeNodes.current.length - 2].x * STEP,
+        y: snakeNodes.current[snakeNodes.current.length - 2].y * STEP
       }))
       setBait(setLocation())
       setSnake([...snake, <Animated.View key={snakeValues.current.length - 1} style={{
         ...styles.snakeNode,
-        width: (WIDTH / 25) -2*margin,
+        width: STEP -2*margin,
         margin: margin,
         transform: [
           { translateX: snakeValues.current[snakeValues.current.length - 1].x },
@@ -131,7 +128,7 @@ function App(): JSX.Element {
 
     for (let i = 0; i < snakeValues.current.length; ++i) {
       Animated.timing(snakeValues.current[i], {
-        toValue: { x: snakeNodes.current[i].x * (WIDTH / 25), y: snakeNodes.current[i].y * (WIDTH / 25) },
+        toValue: { x: snakeNodes.current[i].x * STEP, y: snakeNodes.current[i].y * STEP },
         duration: TICK_TIME,
         easing: Easing.linear,
         useNativeDriver: true,
@@ -172,7 +169,7 @@ function App(): JSX.Element {
       }} />,
       <Animated.View key={1} style={{
         ...styles.snakeNode,
-        width: (WIDTH / 25) -2,
+        width: STEP -2,
         margin: 1,
         transform: [
           { translateX: snakeValues.current[1].x },
@@ -181,7 +178,7 @@ function App(): JSX.Element {
       }} />,
       <Animated.View key={2} style={{
         ...styles.snakeNode,
-        width: (WIDTH / 25) -2,
+        width: STEP -2,
         margin: 1,
         transform: [
           { translateX: snakeValues.current[2].x },
@@ -217,8 +214,8 @@ function App(): JSX.Element {
 
         <View style={{
           ...styles.bait,
-          top: bait.baitY * (WIDTH / 25),
-          left: bait.baitX * (WIDTH / 25)
+          top: bait.baitY * STEP,
+          left: bait.baitX * STEP
         }} />
 
         {snake}
@@ -278,7 +275,7 @@ const styles = StyleSheet.create({
   },
 
   snakeNode: {
-    width: WIDTH / 25,
+    width: STEP,
     borderRadius: 5,
     aspectRatio: 1,
     backgroundColor: Colors.purple,
@@ -286,8 +283,8 @@ const styles = StyleSheet.create({
   },
 
   bait: {
-    width: WIDTH / 25,
-    borderRadius: WIDTH / 50,
+    width: STEP,
+    borderRadius: STEP / 2,
     aspectRatio: 1,
     backgroundColor: Colors.green,
     position: 'absolute'
