@@ -78,12 +78,12 @@ function App(): JSX.Element {
       baitY = Math.floor(Math.random() * 25)
     } while (snakeNodes.current.find(({ y }) => y === baitY))
 
-    return { baitX, baitY }
+    return { x: baitX, y: baitY }
   }
 
   function tick() {
 
-    if (snakeNodes.current[0].x === bait.baitX && snakeNodes.current[0].y === bait.baitY) {
+    if (snakeNodes.current[0].x === bait.x && snakeNodes.current[0].y === bait.y) {
       let margin = Math.ceil(snake.length / 5)
       if (margin > 4)
         margin = 4
@@ -214,8 +214,8 @@ function App(): JSX.Element {
 
         <View style={{
           ...styles.bait,
-          top: bait.baitY * STEP,
-          left: bait.baitX * STEP
+          top: bait.y * STEP,
+          left: bait.x * STEP
         }} />
 
         {snake}
