@@ -271,7 +271,8 @@ const styles = StyleSheet.create({
   board: {
     width: WIDTH,
     aspectRatio: 1,
-    backgroundColor: Colors.grey
+    backgroundColor: Colors.grey,
+    borderRadius: 8
   },
 
   snakeNode: {
