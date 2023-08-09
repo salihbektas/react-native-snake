@@ -97,6 +97,8 @@ function App(): JSX.Element {
   }
 
   function tick() {
+    if (nextDirection.current === '') return;
+
     if (
       snakeNodes.current[0].x === bait.x &&
       snakeNodes.current[0].y === bait.y
