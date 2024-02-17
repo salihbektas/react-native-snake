@@ -20,8 +20,8 @@ interface snakeNode {
 }
 
 function App(): JSX.Element {
-  const currentDirection = useRef('');
-  const nextDirection = useRef('');
+  const [currentDirection, setCurrentDirection] = useState('');
+  const [nextDirection, setNextDirection] = useState('');
 
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -97,7 +97,7 @@ function App(): JSX.Element {
   }
 
   function tick() {
-    if (nextDirection.current === '') return;
+    if (nextDirection === '') return;
 
     if (
       snakeNodes.current[0].x === bait.x &&
@@ -144,18 +144,18 @@ function App(): JSX.Element {
       snakeNodes.current[i].y = snakeNodes.current[i - 1].y;
     }
 
-    currentDirection.current = nextDirection.current;
+    setCurrentDirection(nextDirection);
 
-    if (currentDirection.current === 'up') {
+    if (currentDirection === 'up') {
       snakeNodes.current[0].y--;
     }
-    if (currentDirection.current === 'left') {
+    if (currentDirection === 'left') {
       snakeNodes.current[0].x--;
     }
-    if (currentDirection.current === 'right') {
+    if (currentDirection === 'right') {
       snakeNodes.current[0].x++;
     }
-    if (currentDirection.current === 'down') {
+    if (currentDirection === 'down') {
       snakeNodes.current[0].y++;
     }
 
@@ -195,8 +195,8 @@ function App(): JSX.Element {
   }
 
   function reset() {
-    currentDirection.current = '';
-    nextDirection.current = '';
+    setCurrentDirection('');
+    setNextDirection('');
     setPoint(0);
     setTime(0);
     setBait(setLocation());
@@ -261,8 +261,8 @@ function App(): JSX.Element {
 
   useInterval(
     () => setTime(t => t + 1),
-    isPlaying && nextDirection.current !== '' && 1000,
-  );
+    isPlaying && nextDirection !== '' && 1000
+    );
 
   return (
     <SafeAreaView style={styles.main}>
@@ -288,8 +288,8 @@ function App(): JSX.Element {
         <Pressable
           style={{...styles.button, marginVertical: 2}}
           onPress={() => {
-            if (currentDirection.current !== 'down')
-              nextDirection.current = 'up';
+            if (currentDirection !== 'down')
+              setNextDirection('up');
           }}>
           <Text style={styles.text}>Up</Text>
         </Pressable>
@@ -297,16 +297,16 @@ function App(): JSX.Element {
           <Pressable
             style={styles.button}
             onPress={() => {
-              if (currentDirection.current !== 'right')
-                nextDirection.current = 'left';
+              if (currentDirection !== 'right')
+                setNextDirection('left');
             }}>
             <Text style={styles.text}>Left</Text>
           </Pressable>
           <Pressable
             style={styles.button}
             onPress={() => {
-              if (currentDirection.current !== 'left')
-                nextDirection.current = 'right';
+              if (currentDirection !== 'left')
+                setNextDirection('right');
             }}>
             <Text style={styles.text}>Right</Text>
           </Pressable>
@@ -314,8 +314,8 @@ function App(): JSX.Element {
         <Pressable
           style={{...styles.button, marginVertical: 2}}
           onPress={() => {
-            if (currentDirection.current !== 'up')
-              nextDirection.current = 'down';
+            if (currentDirection !== 'up')
+              setNextDirection('down');
           }}>
           <Text style={styles.text}>Down</Text>
         </Pressable>
