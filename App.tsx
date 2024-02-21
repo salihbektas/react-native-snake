@@ -10,7 +10,6 @@ import {
   Vibration,
   View,
 } from 'react-native';
-import useInterval from 'use-interval';
 import Colors from './Colors';
 import {STEP, TICK_TIME, WIDTH} from './src/constants';
 
@@ -19,7 +18,7 @@ interface snakeNode {
   y: number;
 }
 
-function App(): JSX.Element {
+function App(): React.JSX.Element {
   const [currentDirection, setCurrentDirection] = useState('');
   const [nextDirection, setNextDirection] = useState('');
 
@@ -257,13 +256,14 @@ function App(): JSX.Element {
     return point.toString().padStart(2, '\u2007').padEnd(3, '\u2007');
   }
 
+  /*
   useInterval(tick, isPlaying && TICK_TIME);
 
   useInterval(
     () => setTime(t => t + 1),
     isPlaying && nextDirection !== '' && 1000
     );
-
+*/
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.topContainer}>
